@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../models/gallery_image.dart';
+import '../services/gallery_service.dart';
+import 'dialog_confirm.dart';
 
 class DialogImage {
   static void show(GalleryImage image) {
@@ -11,39 +13,6 @@ class DialogImage {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // 顶部标题栏
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.7),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(12),
-                  topRight: Radius.circular(12),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      image.name,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                    onPressed: () => Get.back(),
-                  ),
-                ],
-              ),
-            ),
-            
             // 图片内容
             Flexible(
               child: Container(
@@ -52,18 +21,57 @@ class DialogImage {
                 ),
                 decoration: BoxDecoration(
                   color: Colors.black,
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(12),
-                    bottomRight: Radius.circular(12),
-                  ),
+                  borderRadius: const BorderRadius.all(Radius.circular(12)),
                 ),
-                child: InteractiveViewer(
-                  minScale: 0.5,
-                  maxScale: 4.0,
-                  child: Image.file(
-                    image.file,
-                    fit: BoxFit.contain,
-                  ),
+                child: Stack(
+                  children: [
+                    // 可交互图片
+                    InteractiveViewer(
+                      minScale: 0.5,
+                      maxScale: 4.0,
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.all(Radius.circular(12)),
+                        child: Image.file(
+                          image.file,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                    
+                    // 删除按钮
+                    Positioned(
+                      bottom: 8,
+                      right: 8,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(20),
+                          onTap: () {
+                            // 先关闭图片对话框
+                            Get.back();
+                            // 显示确认对话框
+                            DialogConfirm.show(
+                              title: '删除图片',
+                              content: '确定要删除这张图片吗？',
+                              onConfirm: () => Get.find<GalleryService>().deleteImage(image.id),
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withAlpha(128),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                              size: 24,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

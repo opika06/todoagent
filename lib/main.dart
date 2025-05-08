@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'services/gallery_service.dart';
 import 'services/storage_service.dart';
+import 'services/staff_service.dart';
 import 'routes/app_pages.dart';
 
 void main() async {
@@ -23,6 +24,12 @@ Future<void> initServices() async {
 
   // 初始化图库服务
   Get.put(GalleryService());
+  
+  // 初始化干员服务
+  await Get.putAsync<StaffService>(() async {
+    final service = StaffService();
+    return await service.init();
+  });
 }
 
 class MyApp extends StatelessWidget {

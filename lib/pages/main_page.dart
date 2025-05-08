@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../pages/gallery_page.dart';
 import '../pages/demo_page.dart';
+import '../pages/staff_page.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
@@ -24,7 +25,7 @@ class MainPage extends StatelessWidget {
         body: Obx(
           () => IndexedStack(
             index: controller.currentIndex.value,
-            children: const [DemoPage(), GalleryPage()],
+            children: const [DemoPage(), StaffPage(), GalleryPage()],
           ),
         ),
         bottomNavigationBar: Obx(
@@ -33,6 +34,7 @@ class MainPage extends StatelessWidget {
             onTap: controller.changePage,
             items: const [
               BottomNavigationBarItem(icon: Icon(Icons.abc), label: '示例'),
+              BottomNavigationBarItem(icon: Icon(Icons.person_rounded), label: '干员'), 
               BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: '图库'),
             ],
             selectedItemColor: Colors.blue,

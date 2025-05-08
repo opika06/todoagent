@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../models/gallery_image.dart';
-import '../services/gallery_service.dart';
 import 'dialog_image.dart';
-import 'dialog_confirm.dart';
 
 class GalleryImageItem extends StatelessWidget {
   final GalleryImage image;
@@ -70,37 +68,6 @@ class GalleryImageItem extends StatelessWidget {
                     );
                   }
                 }),
-
-                // 删除按钮
-                Positioned(
-                  top: 4,
-                  right: 4,
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(20),
-                      onTap: () {
-                        DialogConfirm.show(
-                          title: '删除图片',
-                          content: '确定要删除这张图片吗？',
-                          onConfirm: () => Get.find<GalleryService>().deleteImage(image.id),
-                        );
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withValues(alpha: 0.5),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.delete,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
 
