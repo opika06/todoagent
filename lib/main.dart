@@ -1,9 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'services/gallery_service.dart';
+import 'services/storage_service.dart';
+import 'routes/app_pages.dart';
 
-import 'pages/home_page.dart';
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-void main() {
+  // 初始化服务
+  await initServices();
+
   runApp(const MyApp());
+}
+
+// 初始化所有服务
+Future<void> initServices() async {
+  // 初始化存储服务
+  await Get.putAsync<StorageService>(() async {
+    final service = StorageService();
+    return await service.init();
+  });
+
+  // 初始化图库服务
+  Get.put(GalleryService());
 }
 
 class MyApp extends StatelessWidget {
@@ -11,13 +30,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
+    return GetMaterialApp(
       title: 'TodoAgent',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: HomePage(),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
+      initialRoute: AppPages.INITIAL,
+      getPages: AppPages.routes,
     );
   }
 }
