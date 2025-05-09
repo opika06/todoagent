@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
-import '../pages/gallery_page.dart';
+import '../pages/agent/gallery/gallery_page.dart';
 import '../pages/demo_page.dart';
 import '../pages/main_page.dart';
-import '../pages/staff_page.dart';
-import '../pages/staff_detail_page.dart';
+import '../pages/agent/staff/staff_page.dart';
+import '../pages/agent/staff/staff_detail_page.dart';
 
 part 'app_routes.dart';
 

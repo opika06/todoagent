@@ -11,7 +11,7 @@ class Staff {
     required this.name,
     required this.detail,
     required List<String> tags,
-  }) : this.tags = tags.obs;
+  }) : tags = tags.obs;
 
   // 从Map创建Staff对象
   factory Staff.fromJson(Map<String, dynamic> json) {

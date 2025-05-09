@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../pages/gallery_page.dart';
+import 'agent/gallery/gallery_page.dart';
 import '../pages/demo_page.dart';
-import '../pages/staff_page.dart';
+import 'agent/staff/staff_page.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});

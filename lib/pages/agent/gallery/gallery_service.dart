@@ -3,9 +3,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import '../models/gallery_image.dart';
-import '../widgets/dialog_image.dart';
-import 'storage_service.dart';
+import '../../../models/gallery_image.dart';
+import '../../../widgets/dialog_image.dart';
+import '../../../services/storage_service.dart';
 
 class GalleryService extends GetxController {
   // 图片选择器

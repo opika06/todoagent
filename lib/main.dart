@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'services/gallery_service.dart';
+import 'pages/agent/gallery/gallery_service.dart';
 import 'services/storage_service.dart';
-import 'services/staff_service.dart';
+import 'pages/agent/staff/staff_service.dart';
 import 'routes/app_pages.dart';
 
 void main() async {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../services/staff_service.dart';
+import 'staff_service.dart';
 
 class DialogAddStaff {
   static void show() {

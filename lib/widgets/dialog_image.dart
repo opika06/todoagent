@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:like_button/like_button.dart';
 import '../models/gallery_image.dart';
-import '../services/gallery_service.dart';
+import '../pages/agent/gallery/gallery_service.dart';
 
 class DialogImage {
   static void show(GalleryImage image) {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../services/gallery_service.dart';
-import '../widgets/gallery_grid.dart';
-import '../widgets/dialog_confirm.dart';
+import 'gallery_service.dart';
+import 'gallery_grid.dart';
+import '../../../widgets/dialog_confirm.dart';
 
 class GalleryPage extends StatelessWidget {
   const GalleryPage({super.key});

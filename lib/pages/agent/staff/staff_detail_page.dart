@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../models/staff_model.dart';
-import '../services/staff_service.dart';
-import '../widgets/dialog_confirm.dart';
+import '../../../models/staff_model.dart';
+import 'staff_service.dart';
+import '../../../widgets/dialog_confirm.dart';
 
 class StaffDetailPage extends StatelessWidget {
   final Staff staff;

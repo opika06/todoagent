@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import '../services/gallery_service.dart';
+import 'gallery_service.dart';
 import 'gallery_image_item.dart';
 
 class GalleryGrid extends StatelessWidget {

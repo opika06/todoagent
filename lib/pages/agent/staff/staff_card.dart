@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../models/staff_model.dart';
-import '../routes/app_pages.dart';
+import '../../../models/staff_model.dart';
+import '../../../routes/app_pages.dart';
 
 class StaffCard extends StatelessWidget {
   final Staff staff;

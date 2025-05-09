@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../models/staff_model.dart';
-import '../services/staff_service.dart';
-import '../widgets/staff_card.dart';
-import '../widgets/dialog_add_staff.dart';
+import 'staff_service.dart';
+import 'staff_card.dart';
+import 'dialog_add_staff.dart';
 
 class StaffPage extends StatelessWidget {
   const StaffPage({super.key});

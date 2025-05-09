@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
-import '../models/staff_model.dart';
+import '../../../models/staff_model.dart';
 
 class StaffService extends GetxService {
   final RxList<Staff> staffList = <Staff>[].obs;

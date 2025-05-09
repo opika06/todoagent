@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../models/gallery_image.dart';
-import '../services/gallery_service.dart';
-import 'dialog_image.dart';
+import '../../../models/gallery_image.dart';
+import 'gallery_service.dart';
+import '../../../widgets/dialog_image.dart';
 
 class GalleryImageItem extends StatelessWidget {
   final GalleryImage image;
