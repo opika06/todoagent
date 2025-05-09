@@ -3,7 +3,7 @@ import '../pages/agent/gallery/gallery_page.dart';
 import '../pages/demo_page.dart';
 import '../pages/main_page.dart';
 import '../pages/agent/staff/staff_page.dart';
-import '../pages/agent/staff/staff_detail_page.dart';
+import '../pages/agent/staff/edit_staff_page.dart';
 
 part 'app_routes.dart';
 
@@ -32,8 +32,8 @@ class AppPages {
       transition: Transition.fadeIn,
     ),
     GetPage(
-      name: Routes.STAFF_DETAIL,
-      page: () => StaffDetailPage(staff: Get.arguments),
+      name: Routes.STAFF_EDIT,
+      page: () => EditStaffPage(),
       transition: Transition.rightToLeft,
     ),
   ];

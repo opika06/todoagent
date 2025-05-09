@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'staff_service.dart';
 import 'staff_card.dart';
-import 'dialog_add_staff.dart';
+import '../../../routes/app_pages.dart';
 
 class StaffPage extends StatelessWidget {
   const StaffPage({super.key});
@@ -17,9 +17,10 @@ class StaffPage extends StatelessWidget {
         AppBar(
           title: const Text('干员档案'),
           actions: [
+            // 新建"干员档案"
             IconButton(
               icon: const Icon(Icons.add_rounded),
-              onPressed: () => DialogAddStaff.show(),
+              onPressed: () => Get.toNamed(Routes.STAFF_EDIT),
             ),
           ],
         ),
@@ -46,7 +47,7 @@ class StaffPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton.icon(
-                      onPressed: () => DialogAddStaff.show(),
+                      onPressed: () => Get.toNamed(Routes.STAFF_EDIT),
                       icon: const Icon(Icons.add),
                       label: const Text('添加干员'),
                     ),
@@ -55,17 +56,14 @@ class StaffPage extends StatelessWidget {
               );
             } else {
               // 显示干员网格
-              return GridView.builder(
+              return ListView.builder(
                 padding: const EdgeInsets.all(16),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3, // 每行显示3个
-                  childAspectRatio: 0.8, // 宽高比
-                  crossAxisSpacing: 12, // 水平间距
-                  mainAxisSpacing: 12, // 垂直间距
-                ),
                 itemCount: staffList.length,
                 itemBuilder: (context, index) {
-                  return StaffCard(staff: staffList[index]);
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: StaffCard(staff: staffList[index]),
+                  );
                 },
               );
             }

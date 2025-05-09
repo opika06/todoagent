@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../models/staff_model.dart';
-import '../../../routes/app_pages.dart';
+import 'edit_staff_page.dart';
 
 class StaffCard extends StatelessWidget {
   final Staff staff;
@@ -11,15 +11,22 @@ class StaffCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: Colors.grey, width: 1.0),
+      ),
       child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: () => Get.toNamed(Routes.STAFF_DETAIL, arguments: staff),
+        borderRadius: BorderRadius.circular(8),
+        onTap:
+            () => Get.to(
+              () => EditStaffPage(staff: staff),
+              transition: Transition.rightToLeft,
+            ),
         child: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // 头像
               CircleAvatar(
@@ -34,7 +41,7 @@ class StaffCard extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(width: 20),
               // 名称
               Text(
                 staff.name,
@@ -52,4 +59,4 @@ class StaffCard extends StatelessWidget {
       ),
     );
   }
-} 
+}
