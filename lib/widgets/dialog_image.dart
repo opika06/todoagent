@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:like_button/like_button.dart';
 import '../models/gallery_image.dart';
 import '../services/gallery_service.dart';
-import 'dialog_confirm.dart';
 
 class DialogImage {
   static void show(GalleryImage image) {
@@ -38,37 +38,37 @@ class DialogImage {
                       ),
                     ),
                     
-                    // 删除按钮
+                    // 喜欢按钮
                     Positioned(
                       bottom: 8,
                       right: 8,
                       child: Material(
                         color: Colors.transparent,
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(20),
-                          onTap: () {
-                            // 先关闭图片对话框
-                            Get.back();
-                            // 显示确认对话框
-                            DialogConfirm.show(
-                              title: '删除图片',
-                              content: '确定要删除这张图片吗？',
-                              onConfirm: () => Get.find<GalleryService>().deleteImage(image.id),
+                        child: Obx(() => LikeButton(
+                          size: 40,
+                          isLiked: image.isLike.value,
+                          circleColor: const CircleColor(
+                            start: Color(0xFFFF5722),
+                            end: Color(0xFFFFC107),
+                          ),
+                          bubblesColor: const BubblesColor(
+                            dotPrimaryColor: Color(0xFFFF5722),
+                            dotSecondaryColor: Color(0xFFFFC107),
+                          ),
+                          likeBuilder: (bool isLiked) {
+                            return Icon(
+                              isLiked ? Icons.favorite : Icons.favorite_border,
+                              color: isLiked ? Colors.red : Colors.white,
+                              size: 28,
                             );
                           },
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.black.withAlpha(128),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.delete,
-                              color: Colors.white,
-                              size: 24,
-                            ),
-                          ),
-                        ),
+                          onTap: (isLiked) async {
+                            // 切换喜欢状态
+                            Get.find<GalleryService>().toggleImageLike(image.id);
+                            // 返回新的状态
+                            return !isLiked;
+                          },
+                        )),
                       ),
                     ),
                   ],

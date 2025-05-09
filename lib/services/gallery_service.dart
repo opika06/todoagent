@@ -20,6 +20,12 @@ class GalleryService extends GetxController {
   // 单例模式
   static GalleryService get to => Get.find<GalleryService>();
   
+  // 选中的图片ID集合
+  final RxSet<String> selectedImageIds = <String>{}.obs;
+  
+  // 是否处于选择模式
+  final RxBool isSelectMode = false.obs;
+  
   // 图片导入
   Future<void> pickImage() async {
     try {
@@ -91,5 +97,82 @@ class GalleryService extends GetxController {
     Get.snackbar('成功', '已清空所有图片',
         snackPosition: SnackPosition.BOTTOM,
         duration: const Duration(seconds: 1));
+  }
+  
+  // 切换图片喜欢状态
+  void toggleImageLike(String id) {
+    final index = images.indexWhere((image) => image.id == id);
+    if (index >= 0) {
+      images[index].toggleLike();
+      // 保存喜欢状态到持久化存储
+      _storageService.saveIndex();
+    }
+  }
+  
+  // 切换图片选中状态
+  void toggleImageSelection(String id) {
+    if (selectedImageIds.contains(id)) {
+      selectedImageIds.remove(id);
+    } else {
+      selectedImageIds.add(id);
+    }
+    
+    // 如果没有选中的图片，退出选择模式
+    if (selectedImageIds.isEmpty) {
+      isSelectMode.value = false;
+    } else if (!isSelectMode.value) {
+      // 如果不是选择模式，进入选择模式
+      isSelectMode.value = true;
+    }
+  }
+  
+  // 选择所有图片
+  void selectAll() {
+    selectedImageIds.clear();
+    for (var image in images) {
+      selectedImageIds.add(image.id);
+    }
+  }
+  
+  // 取消选择所有图片
+  void clearSelection() {
+    selectedImageIds.clear();
+    isSelectMode.value = false;
+  }
+  
+  // 删除选中的图片
+  Future<void> deleteSelected() async {
+    // 复制选中的ID列表，因为在删除过程中会修改原列表
+    final idsToDelete = selectedImageIds.toList();
+    
+    // 显示加载指示器
+    final loadingDialog = Get.dialog(
+      const Center(
+        child: CircularProgressIndicator(),
+      ),
+      barrierDismissible: false,
+    );
+    
+    int successCount = 0;
+    for (final id in idsToDelete) {
+      final success = await _storageService.deleteImage(id);
+      if (success) {
+        successCount++;
+      }
+    }
+    
+    // 关闭加载指示器
+    Get.back();
+    
+    // 清空选择
+    clearSelection();
+    
+    // 显示结果
+    Get.snackbar(
+      '删除完成', 
+      '已删除 $successCount 张图片',
+      snackPosition: SnackPosition.BOTTOM,
+      duration: const Duration(seconds: 2),
+    );
   }
 } 

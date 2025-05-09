@@ -14,36 +14,68 @@ class GalleryPage extends StatelessWidget {
 
     return Column(
       children: [
-        AppBar(
-          title: const Text('本地图库'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.add_rounded),
-              onPressed: () => galleryService.pickImage(),
-            ),
-            Obx(
-              () => IconButton(
-                icon: const Icon(Icons.shuffle),
-                onPressed:
-                    galleryService.images.isEmpty
-                        ? null
-                        : () => galleryService.showRandomImage(),
+        Obx(() {
+          // 根据是否处于选择模式显示不同的AppBar
+          if (galleryService.isSelectMode.value) {
+            return AppBar(
+              title: Obx(() => Text('已选择 ${galleryService.selectedImageIds.length} 项')),
+              leading: IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => galleryService.clearSelection(),
               ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.delete_outline),
-              onPressed: () {
-                if (galleryService.images.isNotEmpty) {
-                  DialogConfirm.show(
-                    title: '删除所有图片',
-                    content: '确定要清空所有图片吗？',
-                    onConfirm: () => galleryService.clearAll(),
-                  );
-                }
-              },
-            ),
-          ],
-        ),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.select_all),
+                  onPressed: () => galleryService.selectAll(),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    if (galleryService.selectedImageIds.isNotEmpty) {
+                      DialogConfirm.show(
+                        title: '删除选中项',
+                        content: '确定要删除选中的 ${galleryService.selectedImageIds.length} 张图片吗？',
+                        onConfirm: () => galleryService.deleteSelected(),
+                      );
+                    }
+                  },
+                ),
+              ],
+            );
+          } else {
+            // 正常模式的AppBar
+            return AppBar(
+              title: const Text('本地图库'),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.add_rounded),
+                  onPressed: () => galleryService.pickImage(),
+                ),
+                Obx(
+                  () => IconButton(
+                    icon: const Icon(Icons.shuffle),
+                    onPressed:
+                        galleryService.images.isEmpty
+                            ? null
+                            : () => galleryService.showRandomImage(),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete_outline),
+                  onPressed: () {
+                    if (galleryService.images.isNotEmpty) {
+                      DialogConfirm.show(
+                        title: '删除所有图片',
+                        content: '确定要清空所有图片吗？',
+                        onConfirm: () => galleryService.clearAll(),
+                      );
+                    }
+                  },
+                ),
+              ],
+            );
+          }
+        }),
         Expanded(
           child: Obx(() {
             if (galleryService.images.isEmpty) {

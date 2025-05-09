@@ -169,6 +169,7 @@ class StorageService extends GetxService {
             name: item['name'],
             addedDate: DateTime.parse(item['addedDate']),
             size: item['size'],
+            isLiked: item['isLiked'] ?? false,
           );
           
           images.add(galleryImage);
@@ -195,6 +196,7 @@ class StorageService extends GetxService {
         'filePath': image.file.path,
         'addedDate': image.addedDate.toIso8601String(),
         'size': image.size,
+        'isLiked': image.isLike.value,
       }).toList();
       
       // 写入索引文件
@@ -204,5 +206,10 @@ class StorageService extends GetxService {
     } catch (e) {
       debugPrint('保存图片索引失败: $e');
     }
+  }
+  
+  // 公开的保存索引方法
+  Future<void> saveIndex() async {
+    await _saveIndex();
   }
 } 

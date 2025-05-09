@@ -12,6 +12,7 @@ class GalleryImage {
   final DateTime addedDate;
   final int size; // 文件大小（字节）
   final Rx<Size?> imageSize = Rx<Size?>(null); // 图片尺寸
+  final RxBool isLike = false.obs; // 是否喜欢
 
   GalleryImage({
     required this.id,
@@ -19,7 +20,12 @@ class GalleryImage {
     required this.name,
     required this.addedDate,
     required this.size,
+    bool? isLiked,
   }) {
+    // 初始化喜欢状态
+    if (isLiked != null) {
+      isLike.value = isLiked;
+    }
     // 异步获取图片尺寸
     _loadImageSize();
   }
@@ -60,6 +66,11 @@ class GalleryImage {
       // 设置一个默认尺寸，避免UI问题
       imageSize.value = const Size(100, 100);
     }
+  }
+
+  // 切换喜欢状态
+  void toggleLike() {
+    isLike.value = !isLike.value;
   }
 
   // 生成唯一ID
