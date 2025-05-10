@@ -58,12 +58,26 @@ class StaffService extends GetxService {
   Future<void> updateStaff(String id, String name, String detail, List<String> tags) async {
     final index = staffList.indexWhere((staff) => staff.id == id);
     if (index != -1) {
+      final currentStaff = staffList[index];
       staffList[index] = Staff(
         id: id,
         name: name,
         detail: detail,
         tags: tags,
+        isLike: currentStaff.isLike.value,
       );
+      // 保存到本地存储
+      await saveStaffData();
+    }
+  }
+
+  // 切换干员收藏状态
+  Future<void> toggleStaffLike(String id) async {
+    final index = staffList.indexWhere((staff) => staff.id == id);
+    if (index != -1) {
+      final currentStaff = staffList[index];
+      // 切换收藏状态
+      currentStaff.isLike.toggle();
       // 保存到本地存储
       await saveStaffData();
     }
