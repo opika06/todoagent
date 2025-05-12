@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'agent/gallery/gallery_page.dart';
 import '../pages/demo_page.dart';
 import 'agent/staff/staff_page.dart';
+import 'agent/task/task_page.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
@@ -25,7 +26,7 @@ class MainPage extends StatelessWidget {
         body: Obx(
           () => IndexedStack(
             index: controller.currentIndex.value,
-            children: const [DemoPage(), StaffPage(), GalleryPage()],
+            children: const [TaskPage(), StaffPage(), GalleryPage()],
           ),
         ),
         bottomNavigationBar: Obx(
@@ -33,8 +34,15 @@ class MainPage extends StatelessWidget {
             currentIndex: controller.currentIndex.value,
             onTap: controller.changePage,
             items: const [
-              BottomNavigationBarItem(icon: Icon(Icons.abc), label: '示例'),
-              BottomNavigationBarItem(icon: Icon(Icons.person_rounded), label: '干员'), 
+              // BottomNavigationBarItem(icon: Icon(Icons.abc), label: '示例'),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.view_list_rounded),
+                label: '任务',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person_rounded),
+                label: '干员',
+              ),
               BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: '图库'),
             ],
             selectedItemColor: Colors.blue,

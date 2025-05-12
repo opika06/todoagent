@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:like_button/like_button.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'staff_service.dart';
 import '../../../models/staff_model.dart';
 import '../../../widgets/dialog_confirm.dart';
+import '../gallery/gallery_service.dart';
+import '../gallery/gallery_page.dart';
 
 class EditStaffPage extends StatelessWidget {
   final Staff? staff;
@@ -17,13 +20,19 @@ class EditStaffPage extends StatelessWidget {
   );
   final tagController = TextEditingController();
   late final RxList<String> tags = RxList<String>(staff?.tags.toList() ?? []);
+  late final RxList<String> imageIds = RxList<String>(
+    staff?.imageIds.toList() ?? [],
+  );
   final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(isEditing ? '编辑' : '新建'),
+        title: Text(
+          isEditing ? '编辑' : '新建',
+          style: TextStyle(color: Colors.blueGrey, fontWeight: FontWeight.bold),
+        ),
         actions: [
           // 保存按钮
           IconButton(
@@ -40,6 +49,7 @@ class EditStaffPage extends StatelessWidget {
                     nameController.text.trim(),
                     detailController.text.trim(),
                     tags.toList(),
+                    imageIds.toList(),
                   );
                 } else {
                   // 添加新干员
@@ -47,6 +57,7 @@ class EditStaffPage extends StatelessWidget {
                     nameController.text.trim(),
                     detailController.text.trim(),
                     tags.toList(),
+                    imageIds.toList(),
                   );
                 }
                 Get.back();
@@ -88,7 +99,7 @@ class EditStaffPage extends StatelessWidget {
                     child: TextFormField(
                       controller: nameController,
                       decoration: const InputDecoration(
-                        labelText: '🥷 名称',
+                        labelText: '🥷 干员名称',
                         hintText: "必填",
                         border: OutlineInputBorder(),
                         // prefixIcon: Icon(Icons.person_rounded),
@@ -108,31 +119,37 @@ class EditStaffPage extends StatelessWidget {
                       child: Container(
                         height: 56,
                         alignment: Alignment.center,
-                        child: Obx(() => LikeButton(
-                          size: 32,
-                          isLiked: staff!.isLike.value,
-                          circleColor: const CircleColor(
-                            start: Color(0xFFFF5722),
-                            end: Color(0xFFFFC107),
+                        child: Obx(
+                          () => LikeButton(
+                            size: 32,
+                            isLiked: staff!.isLike.value,
+                            circleColor: const CircleColor(
+                              start: Color(0xFFFF5722),
+                              end: Color(0xFFFFC107),
+                            ),
+                            bubblesColor: const BubblesColor(
+                              dotPrimaryColor: Color(0xFFFF5722),
+                              dotSecondaryColor: Color(0xFFFFC107),
+                            ),
+                            likeBuilder: (bool isLiked) {
+                              return Icon(
+                                isLiked
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: isLiked ? Colors.red : Colors.grey,
+                                size: 24,
+                              );
+                            },
+                            onTap: (isLiked) async {
+                              // 切换收藏状态
+                              Get.find<StaffService>().toggleStaffLike(
+                                staff!.id,
+                              );
+                              // 返回新的状态
+                              return !isLiked;
+                            },
                           ),
-                          bubblesColor: const BubblesColor(
-                            dotPrimaryColor: Color(0xFFFF5722),
-                            dotSecondaryColor: Color(0xFFFFC107),
-                          ),
-                          likeBuilder: (bool isLiked) {
-                            return Icon(
-                              isLiked ? Icons.favorite : Icons.favorite_border,
-                              color: isLiked ? Colors.red : Colors.grey,
-                              size: 24,
-                            );
-                          },
-                          onTap: (isLiked) async {
-                            // 切换收藏状态
-                            Get.find<StaffService>().toggleStaffLike(staff!.id);
-                            // 返回新的状态
-                            return !isLiked;
-                          },
-                        )),
+                        ),
                       ),
                     ),
                 ],
@@ -153,10 +170,10 @@ class EditStaffPage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              Text(
-                "Tags",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
+              // Text(
+              //   "Tags",
+              //   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              // ),
 
               // 显示已添加的标签
               Obx(() {
@@ -255,6 +272,190 @@ class EditStaffPage extends StatelessWidget {
                   ),
                 ],
               ),
+
+              const SizedBox(height: 24),
+
+              // 图片区域标题
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "图片",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  // 添加图片按钮
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      // 进入图库选择模式
+                      final galleryService = Get.find<GalleryService>();
+                      galleryService.isSelectMode.value = true;
+                      galleryService.selectedImageIds.clear();
+
+                      // 预先选中已有的图片
+                      if (imageIds.isNotEmpty) {
+                        for (final id in imageIds) {
+                          galleryService.selectedImageIds.add(id);
+                        }
+                      }
+
+                      // 跳转到图库页面
+                      final result = await Get.to(
+                        () => Scaffold(
+                          body: const GalleryPage(),
+                          bottomNavigationBar: BottomAppBar(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextButton(
+                                    onPressed: () {
+                                      galleryService.clearSelection();
+                                      Get.back(result: null);
+                                    },
+                                    child: const Text('取消'),
+                                  ),
+                                  Obx(
+                                    () => Text(
+                                      '已选择 ${galleryService.selectedImageIds.length} 项',
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Get.back(
+                                        result:
+                                            galleryService.selectedImageIds
+                                                .toList(),
+                                      );
+                                    },
+                                    child: const Text('确定'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+
+                      // 处理返回结果
+                      if (result != null && result is List<String>) {
+                        imageIds.clear();
+                        imageIds.addAll(result);
+                      }
+                    },
+                    icon: const Icon(Icons.add_photo_alternate),
+                    label: const Text('选择图片'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 16),
+
+              // 显示已选图片
+              Obx(() {
+                if (imageIds.isEmpty) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16.0),
+                      child: Text(
+                        '尚未添加图片',
+                        style: TextStyle(color: Colors.grey, fontSize: 14),
+                      ),
+                    ),
+                  );
+                } else {
+                  // 创建一个与GalleryGrid相似的布局来显示已选图片
+                  return SizedBox(
+                    height: 300,
+                    child: Builder(
+                      builder: (context) {
+                        final galleryService = Get.find<GalleryService>();
+                        final selectedImages =
+                            galleryService.images
+                                .where((img) => imageIds.contains(img.id))
+                                .toList();
+
+                        // 根据屏幕宽度决定列数
+                        final screenWidth = MediaQuery.of(context).size.width;
+                        final crossAxisCount = screenWidth > 600 ? 4 : 2;
+
+                        return MasonryGridView.count(
+                          crossAxisCount: crossAxisCount,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
+                          itemCount: selectedImages.length,
+                          scrollDirection: Axis.vertical,
+                          physics: const BouncingScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            final image = selectedImages[index];
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 4.0),
+                              child: Stack(
+                                children: [
+                                  Card(
+                                    clipBehavior: Clip.antiAlias,
+                                    elevation: 3,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        AspectRatio(
+                                          aspectRatio:
+                                              image.imageSize.value != null
+                                                  ? image.aspectRatio
+                                                  : 1.0,
+                                          child: Image.file(
+                                            image.file,
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 8,
+                                    right: 8,
+                                    child: Container(
+                                      width: 24,
+                                      height: 24,
+                                      decoration: const BoxDecoration(
+                                        color: Colors.red,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: IconButton(
+                                        padding: EdgeInsets.zero,
+                                        icon: const Icon(
+                                          Icons.close,
+                                          color: Colors.white,
+                                          size: 16,
+                                        ),
+                                        onPressed: () {
+                                          imageIds.remove(image.id);
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  );
+                }
+              }),
             ],
           ),
         ),

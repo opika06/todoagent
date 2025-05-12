@@ -18,7 +18,12 @@ class GalleryPage extends StatelessWidget {
           // 根据是否处于选择模式显示不同的AppBar
           if (galleryService.isSelectMode.value) {
             return AppBar(
-              title: Obx(() => Text('已选择 ${galleryService.selectedImageIds.length} 项')),
+              title: Obx(
+                () => Text(
+                  '已选择 ${galleryService.selectedImageIds.length} 项',
+                  style: TextStyle(color: Colors.blueGrey),
+                ),
+              ),
               leading: IconButton(
                 icon: const Icon(Icons.close),
                 onPressed: () => galleryService.clearSelection(),
@@ -34,7 +39,8 @@ class GalleryPage extends StatelessWidget {
                     if (galleryService.selectedImageIds.isNotEmpty) {
                       DialogConfirm.show(
                         title: '删除选中项',
-                        content: '确定要删除选中的 ${galleryService.selectedImageIds.length} 张图片吗？',
+                        content:
+                            '确定要删除选中的 ${galleryService.selectedImageIds.length} 张图片吗？',
                         onConfirm: () => galleryService.deleteSelected(),
                       );
                     }
@@ -45,12 +51,20 @@ class GalleryPage extends StatelessWidget {
           } else {
             // 正常模式的AppBar
             return AppBar(
-              title: const Text('本地图库'),
+              title: const Text(
+                '图库',
+                style: TextStyle(
+                  color: Colors.blueGrey,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               actions: [
+                // 按钮 添加图片
                 IconButton(
                   icon: const Icon(Icons.add_rounded),
                   onPressed: () => galleryService.pickImage(),
                 ),
+                // 按钮 随机图片
                 Obx(
                   () => IconButton(
                     icon: const Icon(Icons.shuffle),
@@ -60,26 +74,29 @@ class GalleryPage extends StatelessWidget {
                             : () => galleryService.showRandomImage(),
                   ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.delete_outline),
-                  onPressed: () {
-                    if (galleryService.images.isNotEmpty) {
-                      DialogConfirm.show(
-                        title: '删除所有图片',
-                        content: '确定要清空所有图片吗？',
-                        onConfirm: () => galleryService.clearAll(),
-                      );
-                    }
-                  },
-                ),
+                // 按钮 删除所有图片
+                // IconButton(
+                //   icon: const Icon(Icons.delete_outline),
+                //   onPressed: () {
+                //     if (galleryService.images.isNotEmpty) {
+                //       DialogConfirm.show(
+                //         title: '删除所有图片',
+                //         content: '确定要清空所有图片吗？',
+                //         onConfirm: () => galleryService.clearAll(),
+                //       );
+                //     }
+                //   },
+                // ),
               ],
             );
           }
         }),
         // 添加过滤器选项栏
-        Obx(() => galleryService.images.isEmpty 
-          ? SizedBox() 
-          : _buildFilterBar(galleryService)
+        Obx(
+          () =>
+              galleryService.images.isEmpty
+                  ? SizedBox()
+                  : _buildFilterBar(galleryService),
         ),
         Expanded(
           child: Obx(() {
@@ -92,20 +109,21 @@ class GalleryPage extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.dashboard_customize),
                       iconSize: 80,
-                      color: Colors.blue,
+                      color: Colors.blueAccent,
                       onPressed: () => galleryService.pickImage(),
                     ),
                     const SizedBox(height: 10),
                     const Text(
                       '暂无图片',
                       style: TextStyle(
+                        color: Colors.blueGrey,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 10),
                     const Text(
-                      '请点击上方 "+" 按钮添加',
+                      '点击上方 "+" 按钮添加',
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   ],
@@ -120,7 +138,7 @@ class GalleryPage extends StatelessWidget {
       ],
     );
   }
-  
+
   // 构建过滤器选择栏
   Widget _buildFilterBar(GalleryService galleryService) {
     return Padding(
@@ -130,11 +148,11 @@ class GalleryPage extends StatelessWidget {
         child: Row(
           children: [
             const SizedBox(width: 12),
-            ...GalleryFilter.values.map((filter) => 
-              Padding(
+            ...GalleryFilter.values.map(
+              (filter) => Padding(
                 padding: const EdgeInsets.only(right: 8.0),
-                child: Obx(() => 
-                  FilterChip(
+                child: Obx(
+                  () => FilterChip(
                     label: Text(filter.label),
                     selected: galleryService.currentFilter.value == filter,
                     onSelected: (_) => galleryService.setFilter(filter),

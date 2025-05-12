@@ -4,6 +4,8 @@ import '../pages/demo_page.dart';
 import '../pages/main_page.dart';
 import '../pages/agent/staff/staff_page.dart';
 import '../pages/agent/staff/edit_staff_page.dart';
+import '../pages/agent/task/task_page.dart';
+import '../pages/agent/task/edit_task_page.dart';
 
 part 'app_routes.dart';
 
@@ -16,15 +18,15 @@ class AppPages {
       page: () => const MainPage(),
       transition: Transition.fadeIn,
     ),
+    // GetPage(
+    //   name: Routes.DEMO,
+    //   page: () => const DemoPage(),
+    //   transition: Transition.rightToLeft,
+    // ),
     GetPage(
       name: Routes.GALLERY,
       page: () => const GalleryPage(),
       transition: Transition.fadeIn,
-    ),
-    GetPage(
-      name: Routes.DEMO,
-      page: () => const DemoPage(),
-      transition: Transition.rightToLeft,
     ),
     GetPage(
       name: Routes.STAFF,
@@ -36,5 +38,15 @@ class AppPages {
       page: () => EditStaffPage(),
       transition: Transition.rightToLeft,
     ),
+    GetPage(
+      name: Routes.TASK,
+      page: () => const TaskPage(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: Routes.TASK_EDIT,
+      page: () => EditTaskPage(),
+      transition: Transition.rightToLeft,
+    ),
   ];
-} 
+}

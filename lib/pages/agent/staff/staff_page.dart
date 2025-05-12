@@ -15,7 +15,13 @@ class StaffPage extends StatelessWidget {
     return Column(
       children: [
         AppBar(
-          title: const Text('干员档案'),
+          title: const Text(
+            '档案',
+            style: TextStyle(
+              color: Colors.blueGrey,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           actions: [
             // 新建"干员档案"
             IconButton(
@@ -27,29 +33,32 @@ class StaffPage extends StatelessWidget {
         Expanded(
           child: Obx(() {
             final staffList = controller.staffService.staffList;
-            
+
             if (staffList.isEmpty) {
               // 空状态显示
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.person_rounded, size: 80, color: Colors.blue),
-                    const SizedBox(height: 20),
-                    const Text(
-                      '干员档案管理',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    IconButton(
+                      icon: const Icon(Icons.person_rounded),
+                      iconSize: 80,
+                      color: Colors.blueAccent,
+                      onPressed: () => Get.toNamed(Routes.STAFF_EDIT),
                     ),
                     const SizedBox(height: 10),
                     const Text(
-                      '尚未添加任何干员档案',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                      '暂无档案',
+                      style: TextStyle(
+                        color: Colors.blueGrey,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    const SizedBox(height: 20),
-                    ElevatedButton.icon(
-                      onPressed: () => Get.toNamed(Routes.STAFF_EDIT),
-                      icon: const Icon(Icons.add),
-                      label: const Text('添加干员'),
+                    const SizedBox(height: 10),
+                    const Text(
+                      '点击上方 "+" 按钮添加',
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   ],
                 ),
@@ -76,7 +85,7 @@ class StaffPage extends StatelessWidget {
 
 class StaffController extends GetxController {
   late final StaffService staffService;
-  
+
   @override
   void onInit() {
     super.onInit();

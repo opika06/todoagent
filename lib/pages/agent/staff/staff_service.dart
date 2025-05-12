@@ -35,12 +35,13 @@ class StaffService extends GetxService {
   }
 
   // 添加干员
-  Future<void> addStaff(String name, String detail, List<String> tags) async {
+  Future<void> addStaff(String name, String detail, List<String> tags, [List<String>? imageIds]) async {
     final staff = Staff(
       id: uuid.v4(),
       name: name,
       detail: detail,
       tags: tags,
+      imageIds: imageIds,
     );
     staffList.add(staff);
     // 保存到本地存储
@@ -55,7 +56,7 @@ class StaffService extends GetxService {
   }
 
   // 更新干员
-  Future<void> updateStaff(String id, String name, String detail, List<String> tags) async {
+  Future<void> updateStaff(String id, String name, String detail, List<String> tags, [List<String>? imageIds]) async {
     final index = staffList.indexWhere((staff) => staff.id == id);
     if (index != -1) {
       final currentStaff = staffList[index];
@@ -65,6 +66,7 @@ class StaffService extends GetxService {
         detail: detail,
         tags: tags,
         isLike: currentStaff.isLike.value,
+        imageIds: imageIds ?? currentStaff.imageIds.toList(),
       );
       // 保存到本地存储
       await saveStaffData();
@@ -129,4 +131,9 @@ class StaffService extends GetxService {
       debugPrint('保存干员数据失败: $e');
     }
   }
-} 
+
+  // 根据ID获取干员
+  Staff? getStaffById(String id) {
+    return staffList.firstWhereOrNull((staff) => staff.id == id);
+  }
+}

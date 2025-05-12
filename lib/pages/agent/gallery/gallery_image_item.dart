@@ -12,12 +12,12 @@ class GalleryImageItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final galleryService = Get.find<GalleryService>();
-    
+
     return Obx(() {
       final isSelected = galleryService.selectedImageIds.contains(image.id);
       final isSelectMode = galleryService.isSelectMode.value;
       final isLiked = image.isLike.value;
-      
+
       return Card(
         clipBehavior: Clip.antiAlias,
         elevation: 3,
@@ -89,7 +89,7 @@ class GalleryImageItem extends StatelessWidget {
                   }),
                 ],
               ),
-              
+
               // 选中状态指示器
               if (isSelected)
                 Positioned(
@@ -109,7 +109,7 @@ class GalleryImageItem extends StatelessWidget {
                     ),
                   ),
                 ),
-              
+
               // 喜欢状态指示器
               if (isLiked && !isSelectMode)
                 Positioned(
@@ -118,10 +118,10 @@ class GalleryImageItem extends StatelessWidget {
                   child: Container(
                     width: 24,
                     height: 24,
-                    decoration: const BoxDecoration(
-                      color: Colors.black54,
-                      shape: BoxShape.circle,
-                    ),
+                    // decoration: const BoxDecoration(
+                    //   color: Colors.black54,
+                    //   shape: BoxShape.circle,
+                    // ),
                     child: const Icon(
                       Icons.favorite,
                       color: Colors.red,

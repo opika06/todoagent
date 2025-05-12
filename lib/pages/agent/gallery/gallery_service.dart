@@ -231,4 +231,9 @@ class GalleryService extends GetxController {
       duration: const Duration(seconds: 2),
     );
   }
-} 
+
+  // 根据ID获取图片
+  GalleryImage? getImageById(String id) {
+    return images.firstWhereOrNull((image) => image.id == id);
+  }
+}

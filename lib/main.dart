@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'pages/agent/gallery/gallery_service.dart';
 import 'services/storage_service.dart';
 import 'pages/agent/staff/staff_service.dart';
+import 'pages/agent/task/task_service.dart';
 import 'routes/app_pages.dart';
 
 void main() async {
@@ -24,10 +25,16 @@ Future<void> initServices() async {
 
   // 初始化图库服务
   Get.put(GalleryService());
-  
+
   // 初始化干员服务
   await Get.putAsync<StaffService>(() async {
     final service = StaffService();
+    return await service.init();
+  });
+
+  // 初始化任务服务
+  await Get.putAsync<TaskService>(() async {
+    final service = TaskService();
     return await service.init();
   });
 }
