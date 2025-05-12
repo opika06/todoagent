@@ -21,6 +21,7 @@ class GalleryImage {
     required this.addedDate,
     required this.size,
     bool? isLiked,
+    // List<Staff>? staff,
   }) {
     // 初始化喜欢状态
     if (isLiked != null) {
@@ -46,7 +47,7 @@ class GalleryImage {
       return '${(size / (1024 * 1024)).toStringAsFixed(2)} MB';
     }
   }
-  
+
   // 获取图片宽高比，默认为1.0
   double get aspectRatio {
     if (imageSize.value == null) return 1.0;
@@ -92,4 +93,4 @@ class GalleryImage {
       size: file.lengthSync(),
     );
   }
-} 
+}

@@ -76,8 +76,14 @@ class GalleryPage extends StatelessWidget {
             );
           }
         }),
+        // 添加过滤器选项栏
+        Obx(() => galleryService.images.isEmpty 
+          ? SizedBox() 
+          : _buildFilterBar(galleryService)
+        ),
         Expanded(
           child: Obx(() {
+            // 如果图片列表为空，显示空状态和添加按钮
             if (galleryService.images.isEmpty) {
               return Center(
                 child: Column(
@@ -106,11 +112,42 @@ class GalleryPage extends StatelessWidget {
                 ),
               );
             } else {
+              // 显示过滤后的图片列表
               return const GalleryGrid();
             }
           }),
         ),
       ],
+    );
+  }
+  
+  // 构建过滤器选择栏
+  Widget _buildFilterBar(GalleryService galleryService) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            const SizedBox(width: 12),
+            ...GalleryFilter.values.map((filter) => 
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Obx(() => 
+                  FilterChip(
+                    label: Text(filter.label),
+                    selected: galleryService.currentFilter.value == filter,
+                    onSelected: (_) => galleryService.setFilter(filter),
+                    selectedColor: Colors.blue[100],
+                    checkmarkColor: Colors.blue[800],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 4),
+          ],
+        ),
+      ),
     );
   }
 }

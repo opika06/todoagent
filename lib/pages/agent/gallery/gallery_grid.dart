@@ -20,12 +20,12 @@ class GalleryGrid extends StatelessWidget {
         crossAxisCount: crossAxisCount,
         mainAxisSpacing: 10, // 增加垂直间距
         crossAxisSpacing: 10, // 增加水平间距
-        itemCount: galleryService.images.length,
+        itemCount: galleryService.filteredImages.length,
         // 添加物理滚动效果
         physics: const BouncingScrollPhysics(),
         // 设置砖砌布局参数
         itemBuilder: (context, index) {
-          final image = galleryService.images[index];
+          final image = galleryService.filteredImages[index];
           
           // 使用IndexedSemanticsTag确保Hero动画正常工作
           return Padding(

@@ -7,6 +7,17 @@ import '../../../models/gallery_image.dart';
 import '../../../widgets/dialog_image.dart';
 import '../../../services/storage_service.dart';
 
+// 定义过滤器类型枚举
+enum GalleryFilter {
+  all('ALL'),
+  favorite('收藏'),
+  latest('最新'),
+  oldest('最早');
+  
+  final String label;
+  const GalleryFilter(this.label);
+}
+
 class GalleryService extends GetxController {
   // 图片选择器
   final ImagePicker _picker = ImagePicker();
@@ -17,6 +28,12 @@ class GalleryService extends GetxController {
   // 获取图片列表的引用
   RxList<GalleryImage> get images => _storageService.images;
   
+  // 过滤后的图片列表
+  final RxList<GalleryImage> filteredImages = <GalleryImage>[].obs;
+  
+  // 当前选择的过滤器
+  final Rx<GalleryFilter> currentFilter = GalleryFilter.all.obs;
+  
   // 单例模式
   static GalleryService get to => Get.find<GalleryService>();
   
@@ -25,6 +42,43 @@ class GalleryService extends GetxController {
   
   // 是否处于选择模式
   final RxBool isSelectMode = false.obs;
+  
+  @override
+  void onInit() {
+    super.onInit();
+    // 监听原始图片列表变化，更新过滤后的列表
+    ever(images, (_) => applyFilter());
+    // 初始化过滤器
+    applyFilter();
+  }
+  
+  // 应用过滤器
+  void applyFilter() {
+    switch (currentFilter.value) {
+      case GalleryFilter.all:
+        filteredImages.assignAll(images);
+        break;
+      case GalleryFilter.favorite:
+        filteredImages.assignAll(images.where((image) => image.isLike.value));
+        break;
+      case GalleryFilter.latest:
+        final sorted = images.toList()
+          ..sort((a, b) => b.addedDate.compareTo(a.addedDate));
+        filteredImages.assignAll(sorted);
+        break;
+      case GalleryFilter.oldest:
+        final sorted = images.toList()
+          ..sort((a, b) => a.addedDate.compareTo(b.addedDate));
+        filteredImages.assignAll(sorted);
+        break;
+    }
+  }
+  
+  // 设置过滤器
+  void setFilter(GalleryFilter filter) {
+    currentFilter.value = filter;
+    applyFilter();
+  }
   
   // 图片导入
   Future<void> pickImage() async {
@@ -106,6 +160,8 @@ class GalleryService extends GetxController {
       images[index].toggleLike();
       // 保存喜欢状态到持久化存储
       _storageService.saveIndex();
+      // 重新应用过滤器
+      applyFilter();
     }
   }
   
@@ -129,7 +185,7 @@ class GalleryService extends GetxController {
   // 选择所有图片
   void selectAll() {
     selectedImageIds.clear();
-    for (var image in images) {
+    for (var image in filteredImages) {
       selectedImageIds.add(image.id);
     }
   }
